@@ -44,6 +44,9 @@ func DoWork(q chan Work, done chan struct{}, logDir string) {
 getMoreWork:
 	for w := range q {
 		for i := 0; i < len(w.commands); i++ {
+			if len(w.commands[i]) == 0 {
+				continue
+			}
 			cmd := exec.Command("ssh", "-o StrictHostKeyChecking=no", w.host, w.commands[i])
 			log.Println(color.CyanString(fmt.Sprintf("%s step %d started", w.host, i)))
 			out, err := cmd.CombinedOutput()
